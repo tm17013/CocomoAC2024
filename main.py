@@ -3,7 +3,7 @@ def mostrar_bienvenida():
     print("*             Calculadora de COCOMO                        *")
     print("*       Analisis de Costos Informaticos 2024               *")
     print("*    Creado por: Kenia Tepas y  Victoria Castro            *")
-    print("************************************************************")
+    print("************************************************************\n")
 
 #calculo de KLDC por medio de PFA
 def obtener_kldc_por_puntos_funcion():
@@ -57,7 +57,7 @@ def calcular_costo(numero_personas, tdev):
 
 #seleccionar modo
 def seleccionar_tipo_proyecto():
-    print("Seleccione el tipo de proyecto:")
+    print("\nSeleccione el tipo de proyecto:")
     print("1. Orgánico")
     print("2. Semi-acoplado")
     print("3. Acoplado (Empotrado)")
@@ -111,7 +111,7 @@ def calcular_esfuerzo_intermedio(kldc, eaf, modo):
     return esfuerzo_ajustado
 
 def cocomo_81():
-    print("Has seleccionado COCOMO 81.")
+    print("\nHas seleccionado COCOMO 81.")
     sabe_puntos_funcion = input("¿Sabe los puntos de función de su proyecto? (s/n): ").lower()
     
     if sabe_puntos_funcion == 's':
@@ -124,13 +124,13 @@ def cocomo_81():
 
 #recomendacion del modelo a utilizar segun kldc
     if kldc <= 50:
-        print("Recomendación: Se sugiere calcular esfuerzo por el modelo básico.")
+        print("\nRecomendación: Se sugiere calcular esfuerzo por el modelo básico.")
     elif 50 < kldc < 300:
-        print("Recomendación: Se sugiere calcular esfuerzo por el modelo intermedio.")
+        print("\nRecomendación: Se sugiere calcular esfuerzo por el modelo intermedio.")
     else:
-        print("Recomendación: Se sugiere calcular esfuerzo por el modelo restringido (avanzado).")
+        print("\nRecomendación: Se sugiere calcular esfuerzo por el modelo restringido (avanzado).")
 
-    modelo = input("¿Desea calcular el esfuerzo en el Modelo Básico o Modelo Intermedio? (b/i): ").lower()
+    modelo = input("\n¿Desea calcular el esfuerzo en el Modelo Básico o Modelo Intermedio? (b/i): ").lower()
     
     if modelo == 'b':
         tipo_proyecto = seleccionar_tipo_proyecto()
@@ -150,7 +150,8 @@ def cocomo_81():
         return cocomo_81()
     
     if esfuerzo and tdev and numero_personas and costo:
-        print(f"El esfuerzo estimado es: {esfuerzo:.2f} persona-meses")
+        print("\nRESULTADOS:")
+        print(f"El esfuerzo estimado (PM) es: {esfuerzo:.2f} persona-meses")
         print(f"El tiempo de desarrollo estimado (TDEV) es: {tdev:.2f} meses")
         print(f"El número de personas necesarias es: {numero_personas:.2f}")
         print(f"El costo total estimado es: $ {costo:.2f}")
@@ -170,7 +171,7 @@ def menu():
         print("2. COCOMO II")
         print("3. Salir")
         
-        opcion = input("Ingrese su elección: ")
+        opcion = input("\nIngrese su elección: ")
         
         if opcion == '1':
             cocomo_81()
