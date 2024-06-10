@@ -1,8 +1,8 @@
 def mostrar_bienvenida():
     print("************************************************************")
     print("*             Calculadora de COCOMO                        *")
-    print("*     Materia: Análisis de Costos Informáticos 2024        *")
-    print("*    Creadores: Kenia Tepas y  Victoria Castro             *")
+    print("*       Analisis de Costos Informaticos 2024               *")
+    print("*    Creado por: Kenia Tepas y  Victoria Castro            *")
     print("************************************************************")
 
 #calculo de KLDC por medio de PFA
@@ -170,13 +170,13 @@ def menu():
         print("2. COCOMO II")
         print("3. Salir")
         
-        choice = input("Ingrese su elección: ")
+        opcion = input("Ingrese su elección: ")
         
-        if choice == '1':
+        if opcion == '1':
             cocomo_81()
-        elif choice == '2':
+        elif opcion == '2':
             cocomo_2()
-        elif choice == '3':
+        elif opcion == '3':
             print("Saliendo...")
             break
         else:
