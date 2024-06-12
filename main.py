@@ -1,4 +1,4 @@
-def mostrar_bienvenida():
+def bienvenida():
     print("************************************************************")
     print("*             Calculadora de COCOMO                        *")
     print("*       Analisis de Costos Informaticos 2024               *")
@@ -110,6 +110,70 @@ def calcular_esfuerzo_intermedio(kldc, eaf, modo):
         esfuerzo_ajustado = None
     return esfuerzo_ajustado
 
+#COCOMO2 MODELO1
+def calcular_puntos_objeto():
+    pantallas = int(input("\n¿Cuántas pantallas tiene tu proyecto? "))
+    reportes = int(input("¿Cuántos reportes tiene tu proyecto? "))
+    componentes_3gl = input("¿Los componentes de software son 3GL? (si/no): ")
+
+    if componentes_3gl.lower() == "no":
+        print("Lo siento, el software no es apto para el cálculo de COCOMO II.")
+        return None
+    componentes = 1 if componentes_3gl.lower() == "si" else 0
+    peso_componentes = 10 if componentes_3gl.lower() == "si" else 0
+
+    peso_pantallas = 1 if pantallas <= 5 else (2 if pantallas <= 8 else 3)
+    peso_reportes = 2 if reportes <= 5 else (5 if reportes <= 8 else 8)
+
+    puntos_objeto = pantallas * peso_pantallas + reportes * peso_reportes + componentes* peso_componentes
+    print("\nPuntos Objeto (PO):", puntos_objeto)
+    return puntos_objeto
+
+def calcular_nuevos_puntos_objeto(puntos_objeto):
+    reuso = input("\n¿Conoces el % de reuso? (si/no): ")
+    if reuso.lower() == "no":
+        puntos_reutilizables = int(input("¿Cuántos de los puntos objeto (PO) son componentes que pueden reutilizarse de proyectos anteriores? "))
+        porcentaje_reuso = (puntos_reutilizables / puntos_objeto) * 100
+    else:
+        porcentaje_reuso = float(input("Ingrese el % de reuso: "))
+    
+    nuevos_puntos_objeto = puntos_objeto * (100 - porcentaje_reuso) / 100
+    print("\nNuevos Puntos Objeto (NOP):", nuevos_puntos_objeto)
+    return nuevos_puntos_objeto
+
+def esfuerzo_modelo1(nuevos_puntos_objeto, productividad_promedio=None):
+    if productividad_promedio:
+        prod = productividad_promedio
+    else:
+        experiencia = input("¿Cuál es la experiencia y capacidad de los desarrolladores? (muy bajo, bajo, normal, alto, muy alto): ")
+        if experiencia.lower() == "muy bajo":
+            prod = 4
+        elif experiencia.lower() == "bajo":
+            prod = 7
+        elif experiencia.lower() == "normal":
+            prod = 13
+        elif experiencia.lower() == "alto":
+            prod = 25
+        elif experiencia.lower() == "muy alto":
+            prod = 50
+        else:
+            print("Experiencia no reconocida. Se usara valor de experiencia normal.")
+            prod = 13  #experiencia normal
+    
+    esfuerzo = nuevos_puntos_objeto / prod
+    print("\nEsfuerzo (PM):", esfuerzo)
+
+#FIN COCOMO2 MODELO1
+
+#COCOMO2-MODELO2
+
+#FIN MODELO2
+
+
+#COCOMO2-MODELO 3
+
+#FIN MODELO3
+
 def cocomo_81():
     print("\nHas seleccionado COCOMO 81.")
     sabe_puntos_funcion = input("¿Sabe los puntos de función de su proyecto? (s/n): ").lower()
@@ -160,11 +224,39 @@ def cocomo_81():
 
 def cocomo_2():
     print("Has seleccionado COCOMO II.")
-    # Aquí iría el código específico para COCOMO 2
- 
+    #código para COCOMO 2
+    print("Bienvenido al cálculo de COCOMO II.")
+    #elegir modelo de cocomo 2
+    print("¿Qué modelo de cálculo de esfuerzo desea utilizar?")
+    print("1- Modelo de Composición de Aplicación. \n2-Modelo Diseño Temprano. \n3-Modelo de Post-Arquitectura")
+    modelo = input("Elige un modelo (1,2 o 3): ")
+    
+    #modelo de composicion de aplicacion
+    if modelo == "1":
+        puntos_objeto = calcular_puntos_objeto()
+        if puntos_objeto:
+            nuevos_puntos_objeto = calcular_nuevos_puntos_objeto(puntos_objeto)
+            productividad_promedio = input("¿Conoces el valor de productividad promedio? (si/no): ")
+            if productividad_promedio.lower() == "si":
+                productividad = float(input("Ingrese el valor de productividad promedio: "))
+                esfuerzo_modelo1(nuevos_puntos_objeto, productividad)
+            else:
+                esfuerzo_modelo1(nuevos_puntos_objeto)
+
+    #modelo diseño temprano           
+    elif modelo == "2":
+        print("Modelo Diseño Temprano seleccionado.")
+        #código para Modelo Diseño Temprano
+
+    #modelo post-arqui    
+    elif modelo == "3":
+        print("Modelo de Post-Arquitectura seleccionado.")
+        #código para Modelo de Post-Arquitectura
+    else:
+        print("Selección no válida.")
 
 def menu():
-    mostrar_bienvenida()
+    bienvenida()
     while True:
         print("\nSelecciona una opción:")
         print("1. COCOMO 81")
