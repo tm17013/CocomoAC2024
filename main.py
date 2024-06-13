@@ -130,13 +130,19 @@ def calcular_puntos_objeto():
     return puntos_objeto
 
 def calcular_nuevos_puntos_objeto(puntos_objeto):
-    reuso = input("\n¿Conoces el % de reuso? (si/no): ")
-    if reuso.lower() == "no":
-        puntos_reutilizables = int(input("¿Cuántos de los puntos objeto (PO) son componentes que pueden reutilizarse de proyectos anteriores? "))
-        porcentaje_reuso = (puntos_reutilizables / puntos_objeto) * 100
-    else:
-        porcentaje_reuso = float(input("Ingrese el % de reuso: "))
-    
+    while True:
+        reuso = input("\n¿Conoces el % de reuso? (si/no): ").lower()
+        
+        if reuso == "no":
+            puntos_reutilizables = int(input("¿Cuántos de los puntos objeto (PO) son componentes que pueden reutilizarse de proyectos anteriores? "))
+            porcentaje_reuso = (puntos_reutilizables / puntos_objeto) * 100
+            break
+        elif reuso == "si":
+            porcentaje_reuso = float(input("Ingrese el % de reuso (número entero sin %): "))
+            break
+        else:
+            print("Opción inválida. Por favor, seleccione 'si' o 'no'.")
+
     nuevos_puntos_objeto = puntos_objeto * (100 - porcentaje_reuso) / 100
     print("\nNuevos Puntos Objeto (NOP):", nuevos_puntos_objeto)
     return nuevos_puntos_objeto
@@ -167,9 +173,89 @@ def esfuerzo_modelo1(nuevos_puntos_objeto, productividad_promedio=None):
 
 #COCOMO2-MODELO2
 
+#factor exponencial de escala
+def exponente_b():
+    print("\nIngrese los 5 factores de escala para B (valores entre 1.00 y 5.00):")
+    prec = float(input("1-Precedentes (PREC): "))
+    flex = float(input("2-Desarrollo (FLEX): "))
+    resl = float(input("3-Arquitectura y resolución de riesgo (RESL): "))
+    team = float(input("4-Cohesión de equipo (TEAM): "))
+    pmat = float(input("5-Madurez del proceso (PMAT): "))
+    
+    suma_factores = prec + flex + resl + team + pmat
+    b = 1.01 + 0.01 * suma_factores
+    print(f"\nEl valor de B es: {b:.4f}")
+
+    if b < 1.0:
+        print("El proyecto exhibe economía de escala.")
+    elif b == 1.0:
+        print("Las economías y desconomías de escala están en equilibrio.")
+    else:
+        print("El proyecto muestra deseconomía de escala.")
+    
+    return b
+
+#calculo de esfuerzo nominal- PM nominal
+def esfuerzo_nominal_diseno_temprano(kldc, b):
+    esfuerzo_nominal = 2.94 * (kldc ** b)
+    print(f"\nEsfuerzo nominal (PM_nominal): {esfuerzo_nominal:.4f} personas-mes")
+    return esfuerzo_nominal
+
+#calculo de factores de costo
+def eaf_diseno_temprano():
+    print("\nIngrese los 7 multiplicadores de esfuerzo (EMi):")
+    rucx = float(input("1-RCPX (complejidad del producto): "))
+    ruse = float(input("2-RUSE (reutilización del software): "))
+    pdif = float(input("3-PDIF (dificultad de la plataforma): "))
+    pers = float(input("4-PERS (capacidad del personal): "))
+    prex = float(input("5-PREX (experiencia del personal): "))
+    fcil = float(input("6-FCIL (facilidad de la plataforma): "))
+    sced = float(input("7-SCED (restricciones de planificación): "))
+    
+    eaf = rucx * ruse * pdif * pers * prex * fcil * sced
+    print(f"\nEl Factor de Costo o Multiplicador de esfuerzo (EM) es: {eaf}")
+    return eaf
+
+#calculo de PM estimado
+def esfuerzo_estimado_diseno_temprano(esfuerzo_nominal, eaf):
+    esfuerzo_estimado = esfuerzo_nominal * eaf
+    print(f"Esfuerzo estimado (PM_estimado): {esfuerzo_estimado:.2f} personas-mes")
+    return esfuerzo_estimado
+
+def cocomo_2_diseno_temprano():
+    kldc = float(input("\nIngrese la cantidad de KLDC de su proyecto: "))
+    b = exponente_b()
+    esfuerzo_nominal = esfuerzo_nominal_diseno_temprano(kldc, b)
+    eaf = eaf_diseno_temprano()
+    print("\nRESULTADO PM ESTIMADO:")
+    esfuerzo_estimado = esfuerzo_estimado_diseno_temprano(esfuerzo_nominal, eaf)
+    print("\nCALCULO DE TDEV, N° PERSONAS y COSTO de proyecto: ")
+    #calculo de tdev, personas y costo dependiendo del usuario
+    while True:
+        calcular_detalles = input("¿Desea calcular el TDEV, número de personas y costo del proyecto? (si/no): ").lower()
+        
+        if calcular_detalles == 'si':
+            tipo_proyecto = seleccionar_tipo_proyecto()
+            tdev = calcular_tdev(esfuerzo_estimado, tipo_proyecto)
+            numero_personas = calcular_numero_personas(esfuerzo_estimado, tdev)
+            costo = calcular_costo(numero_personas, tdev)
+            
+            if esfuerzo_estimado and tdev and numero_personas and costo:
+                print("\nRESULTADOS:")
+                print(f"El esfuerzo estimado (PM) es: {esfuerzo_estimado:.2f} persona-meses")
+                print(f"El tiempo de desarrollo estimado (TDEV) es: {tdev:.2f} meses")
+                print(f"El número de personas necesarias es: {numero_personas:.2f}")
+                print(f"El costo total estimado es: $ {costo:.2f}")
+            else:
+                print("Hubo un error en el cálculo.")
+                
+            break
+        elif calcular_detalles == 'no':
+            print("No se calculará TDEV, N° PERSONAS y COSTO de proyecto.")
+            break
+        else:
+            print("Opción no válida. Por favor, seleccione 'si' o 'no'.")
 #FIN MODELO2
-
-
 #COCOMO2-MODELO 3
 
 #FIN MODELO3
@@ -225,14 +311,14 @@ def cocomo_81():
 def cocomo_2():
     print("Has seleccionado COCOMO II.")
     #código para COCOMO 2
-    print("Bienvenido al cálculo de COCOMO II.")
     #elegir modelo de cocomo 2
     print("¿Qué modelo de cálculo de esfuerzo desea utilizar?")
-    print("1- Modelo de Composición de Aplicación. \n2-Modelo Diseño Temprano. \n3-Modelo de Post-Arquitectura")
+    print("1-Modelo de Composición de Aplicación. \n2-Modelo Diseño Temprano. \n3-Modelo de Post-Arquitectura")
     modelo = input("Elige un modelo (1,2 o 3): ")
     
     #modelo de composicion de aplicacion
     if modelo == "1":
+        print("\nModelo de Composición de Aplicación seleccionado.")
         puntos_objeto = calcular_puntos_objeto()
         if puntos_objeto:
             nuevos_puntos_objeto = calcular_nuevos_puntos_objeto(puntos_objeto)
@@ -245,12 +331,12 @@ def cocomo_2():
 
     #modelo diseño temprano           
     elif modelo == "2":
-        print("Modelo Diseño Temprano seleccionado.")
-        #código para Modelo Diseño Temprano
+        print("\nModelo Diseño Temprano seleccionado.")
+        cocomo_2_diseno_temprano()
 
     #modelo post-arqui    
     elif modelo == "3":
-        print("Modelo de Post-Arquitectura seleccionado.")
+        print("\nModelo de Post-Arquitectura seleccionado.")
         #código para Modelo de Post-Arquitectura
     else:
         print("Selección no válida.")
