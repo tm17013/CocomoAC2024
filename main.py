@@ -1,3 +1,4 @@
+#autores: Kenia Stephannie Tepas Mazariego y Andrea Victoria Castro
 def bienvenida():
     print("************************************************************")
     print("*             Calculadora de COCOMO                        *")
@@ -311,7 +312,7 @@ def cocomo_post_architecture():
     PM = A * (size ** E) * product_em
 
     # Mostrar resultados
-    print("\nResultados:")
+    print("\nRESULTADOS:")
     print(f"Constante A: {A}")
     print(f"Constante B: {B}")
     print(f"Factores de escala sumados: {scale_factors_w}")
