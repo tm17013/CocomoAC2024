@@ -256,7 +256,68 @@ def cocomo_2_diseno_temprano():
         else:
             print("Opción no válida. Por favor, seleccione 'si' o 'no'.")
 #FIN MODELO2
-#COCOMO2-MODELO 3
+
+#COCOMO2-MODELO 3 ¨Post - Arquitecture¨
+def get_input(prompt, min_val=0.00, max_val=5.00):
+    while True:
+        try:
+            value = float(input(prompt))
+            if min_val <= value <= max_val:
+                return value
+            else:
+                print(f"Por favor, ingresa un valor entre {min_val} y {max_val}.")
+        except ValueError:
+            print("Entrada no válida. Por favor, ingresa un número.")
+
+def cocomo_post_architecture():
+    # Constantes de COCOMO II Post-Arquitectura
+    A = 2.94
+    B = 0.91
+    # Tamaño del software en KSLOC
+    size = float(input("Ingrese el tamaño del software en KSLOC: "))
+    
+    # Factores de escala (ingresados por el usuario)
+    SF = {}
+    sf_labels = ['PREC', 'FLEX', 'RESL', 'TEAM', 'PMAT']
+    print("\nIngrese los factores de escala SF:\n")
+    for label in sf_labels:
+        SF[label] = get_input(f"Ingrese el valor para {label} (0.00 a 5.00): ")
+
+    # Factores de escala sumados
+    scale_factors_w = sum(SF.values())
+
+    # Multiplicadores de esfuerzo
+    print("\nIngrese los multiplicadores de esfuerzo EM:\n")
+    EM = {}
+    em_labels = [
+        'RELY', 'DATA', 'CPLX', 'RUSE', 'DOCU', 
+        'TIME', 'STOR', 'PVOL', 'ACAP', 'PCAP', 
+        'APEX', 'PLEX', 'LTEX', 'TOOL', 'SITE', 
+        'SCED', 'PMAT'
+    ]
+
+    for label in em_labels:
+        EM[label] = get_input(f"Ingrese el valor para {label} (0.01 a 5.00): ", min_val=0.01, max_val=5.00)
+
+    # Calcular E
+    E = B + 0.01 * scale_factors_w
+
+    # Calcular el producto de los multiplicadores de esfuerzo
+    product_em = 1
+    for value in EM.values():
+        product_em *= value
+
+    # Calcular el esfuerzo (PM)
+    PM = A * (size ** E) * product_em
+
+    # Mostrar resultados
+    print("\nResultados:")
+    print(f"Constante A: {A}")
+    print(f"Constante B: {B}")
+    print(f"Factores de escala sumados: {scale_factors_w}")
+    print(f"Factor de escala E: {E:.4f}")
+    print(f"Producto de los multiplicadores de esfuerzo: {product_em:.4f}")
+    print(f"Esfuerzo estimado (PM): {PM:.2f} Persona-Meses")
 
 #FIN MODELO3
 
@@ -336,8 +397,9 @@ def cocomo_2():
 
     #modelo post-arqui    
     elif modelo == "3":
-        print("\nModelo de Post-Arquitectura seleccionado.")
-        #código para Modelo de Post-Arquitectura
+        print("\nModelo de Post-Arquitectura seleccionado.\n")
+       #Llamada a la funcion de Post-Arquitectura
+        cocomo_post_architecture()
     else:
         print("Selección no válida.")
 
