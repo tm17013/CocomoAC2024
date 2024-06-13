@@ -51,7 +51,7 @@ def calcular_numero_personas(esfuerzo, tdev):
 
 #calculo del costo 
 def calcular_costo(numero_personas, tdev):
-    salario = float(input("Ingrese el salario por persona (mensual): "))
+    salario = float(input("Ingrese el salario por persona para calcular costo del proyecto (mensual): $"))
     costo = numero_personas * salario * tdev
     return costo
 
